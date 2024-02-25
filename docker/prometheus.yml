@@ -1,0 +1,21 @@
+global:
+  scrape_interval: 1m
+
+scrape_configs:
+  - job_name: 'node'
+    scrape_interval: 5s
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['wsl2host:9100']
+
+  - job_name: 'federate-k8s-prometheus'
+    scheme: http
+    honor_labels: true
+    metrics_path: /prometheus/federate
+    params:
+      'match[]':
+        - '{job="kube-state-metrics"}'
+        - '{job="hello-monitoring"}'
+    static_configs:
+      - targets:
+          - 'wsl2host'
